@@ -1,3 +1,5 @@
+package Functions;
+
 import java.util.Random;
 
 public class InitialWeights {

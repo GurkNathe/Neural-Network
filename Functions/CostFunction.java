@@ -1,3 +1,5 @@
+package Functions;
+
 public interface CostFunction {
     public double cost(double[] predictedOutputs, double[] expectedOutputs);
 

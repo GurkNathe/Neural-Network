@@ -1,30 +1,41 @@
-class Layer {
-    double[] weights, weightGradient, weightVelocities;
-    double[] biases, biasesGradient, biasesVelocities;
+package Network;
+
+import Functions.*;
+
+public class Layer {
+    Double[] weights, weightGradient, weightVelocities;
+    Double[] biases, biasesGradient, biasesVelocities;
 
     InitialWeightsFunction init;
     ActivationFunction activation;
     CostFunction cost;
 
     // Number of input nodes and output nodes respectively
-    protected int inNodes, outNodes;
+    public int inNodes, outNodes;
 
     /**
      * Initializes a layer in a neural network
+     * 
+     * @param inputNodes
+     * @param outputNodes
+     * @param weightsInit
+     * @param activate
+     * @param initialWeights
+     * @param costFunc
      */
     public Layer(int inputNodes, int outputNodes, double[] weightsInit, Activation.ActivationFunctionType activate,
             InitialWeights.InitialWeightsType initialWeights, Cost.CostFunctionType costFunc) {
         // Initialize weights and biases arrays
-        weights = new double[inputNodes * outputNodes];
-        biases = new double[outputNodes];
+        weights = new Double[inputNodes * outputNodes];
+        biases = new Double[outputNodes];
 
         // Initialize gradient arrays
-        weightGradient = new double[inputNodes * outputNodes];
-        biasesGradient = new double[outputNodes];
+        weightGradient = new Double[inputNodes * outputNodes];
+        biasesGradient = new Double[outputNodes];
 
         // Initialize velocity arrays
-        weightVelocities = new double[inputNodes * outputNodes];
-        biasesVelocities = new double[outputNodes];
+        weightVelocities = new Double[inputNodes * outputNodes];
+        biasesVelocities = new Double[outputNodes];
 
         inNodes = inputNodes;
         outNodes = outputNodes;
@@ -40,7 +51,13 @@ class Layer {
         initializeWeights(weightsInit);
     }
 
-    // Handles gradient descent
+    /**
+     * Handles gradient descent
+     * 
+     * @param learnRate
+     * @param regularization
+     * @param momentum
+     */
     public void gradient(double learnRate, double regularization, double momentum) {
         double weightDecay = 1 - regularization * learnRate;
 
@@ -49,14 +66,14 @@ class Layer {
             double velocity = weightVelocities[i] * momentum - weightGradient[i] * learnRate;
             weightVelocities[i] = velocity;
             weights[i] = weight * weightDecay + velocity;
-            weightGradient[i] = 0;
+            weightGradient[i] = 0.0;
         }
 
         for (int i = 0; i < outNodes; i++) {
             double velocity = biasesVelocities[i] * momentum - biasesGradient[i] * learnRate;
             biasesVelocities[i] = velocity;
             biases[i] += velocity;
-            biasesGradient[i] = 0;
+            biasesGradient[i] = 0.0;
         }
     }
 
@@ -71,14 +88,14 @@ class Layer {
     }
 
     // Calculates the output values fed through the current layer
-    public double[] outputs(double[] inputs) {
-        double[] output = new double[outNodes];
+    public <T extends Number> Double[] outputs(T[] inputs) {
+        Double[] output = new Double[outNodes];
 
         for (int out = 0; out < outNodes; out++) {
             double weightedInput = biases[out];
 
             for (int in = 0; in < inNodes; in++) {
-                weightedInput += inputs[in] * getWeight(in, out);
+                weightedInput += (Double) inputs[in] * getWeight(in, out);
             }
 
             output[out] = weightedInput;
@@ -92,14 +109,14 @@ class Layer {
         return output;
     }
 
-    public double[] outputs(double[] inputs, LayerData learnData) {
-        learnData.inputs = inputs;
+    public <T extends Number> Double[] outputs(T[] inputs, LayerData learnData) {
+        learnData.inputs = (Double[]) inputs;
 
         for (int nodeOut = 0; nodeOut < outNodes; nodeOut++) {
             double weightedInput = biases[nodeOut];
 
             for (int nodeIn = 0; nodeIn < inNodes; nodeIn++) {
-                weightedInput += inputs[nodeIn] * getWeight(nodeIn, nodeOut);
+                weightedInput += (Double) inputs[nodeIn] * getWeight(nodeIn, nodeOut);
             }
 
             learnData.weightedInputs[nodeOut] = weightedInput;
@@ -113,7 +130,7 @@ class Layer {
         return learnData.activations;
     }
 
-    public void calculateOutputLayerNodeValues(LayerData layerLearnData, double[] expectedOutputs) {
+    public void calculateOutputLayerNodeValues(LayerData layerLearnData, Double[] expectedOutputs) {
         for (int i = 0; i < layerLearnData.nodeValues.length; i++) {
             // Evaluate partial derivatives for current node: cost/activation &
             // activation/weightedInput
@@ -123,7 +140,7 @@ class Layer {
         }
     }
 
-    public void calculateHiddenLayerNodeValues(LayerData layerLearnData, Layer oldLayer, double[] oldNodeValues) {
+    public void calculateHiddenLayerNodeValues(LayerData layerLearnData, Layer oldLayer, Double[] oldNodeValues) {
         for (int newNodeIndex = 0; newNodeIndex < outNodes; newNodeIndex++) {
             double newNodeValue = 0;
             for (int oldNodeIndex = 0; oldNodeIndex < oldNodeValues.length; oldNodeIndex++) {
@@ -171,7 +188,7 @@ class Layer {
      * @param output : index of weight in the layer
      * @return value in array at index
      */
-    public double getWeight(int input, int output) {
+    public Double getWeight(int input, int output) {
         return weights[input * output];
     }
 
@@ -325,5 +342,20 @@ class Layer {
      */
     public void multiplyWeightVelocity(int input, int output, double value) {
         weightVelocities[input * output] *= value;
+    }
+
+    /**
+     * Helper method for initializing weights matrix.
+     */
+    public static double[][] initializeWeights(int[] layers) {
+        double[][] layerWeights = new double[layers.length - 1][2];
+
+        for (int i = 0; i < layerWeights.length; i++) {
+            for (int j = 0; j < layerWeights[i].length; j++) {
+                layerWeights[i][j] = layers[i + j];
+            }
+        }
+
+        return layerWeights;
     }
 }

@@ -1,5 +1,5 @@
 https://www.youtube.com/watch?v=hfMk-kjRv4c
-https://github.com/mil167/Handwriting-Neural-Network
+https://github.com/mil167/Handwriting-Neural-Network.Network
 https://www.dilithjay.com/blog/read-mnist-images-in-java/
-https://github.com/SebLague/Neural-Network-Experiments
+https://github.com/SebLague/Neural-Network.Network-Experiments
 https://towardsdatascience.com/weight-initialization-in-neural-networks-a-journey-from-the-basics-to-kaiming-954fb9b47c79?gi=46202190d35b

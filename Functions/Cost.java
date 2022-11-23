@@ -1,12 +1,14 @@
+package Functions;
+
 public class Cost {
     public enum CostFunctionType {
         MeanSquaredError
     }
 
-    public static CostFunction getCostFunction(CostFunctionType costFunctionType) {
+    public static MeanSquaredError getCostFunction(CostFunctionType costFunctionType) {
         switch (costFunctionType) {
             case MeanSquaredError:
-                return null;
+                return new MeanSquaredError();
             default:
                 return null;
         }

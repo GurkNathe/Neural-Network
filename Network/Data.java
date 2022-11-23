@@ -1,3 +1,5 @@
+package Network;
+
 public class Data {
     public double[][] trainedData;
     public double[][] expectedData;

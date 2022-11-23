@@ -1,5 +1,7 @@
-class Network {
-    protected Layer[] layers;
+package Network;
+
+public class Network {
+    Layer[] layers;
     HyperParameter params;
     NetworkData[] batchLearnData;
 
@@ -25,14 +27,10 @@ class Network {
 
     /**
      * 
-     * @param data           : data structure containing the trained data and
-     *                       expected data (i.e., guess and expected)
-     * @param adjustment     : amount to adjust values by to check for better
-     *                       solutions
-     * @param gradientValues : values for the gradient descent function
-     *                       [0] => learnRate;
-     *                       [1] => regularization;
-     *                       [2] => momentum
+     * @param trainingData
+     * @param learnRate
+     * @param regularization
+     * @param momentum
      */
     public void learn(DataPoint[] trainingData, double learnRate, double regularization, double momentum) {
         if (batchLearnData == null || batchLearnData.length != trainingData.length) {
@@ -54,11 +52,16 @@ class Network {
         }
     }
 
+    /**
+     * 
+     * @param data
+     * @param learnData
+     */
     void updateGradients(DataPoint data, NetworkData learnData) {
         // Feed data through the network to calculate outputs.
         // Save all inputs/weightedinputs/activations along the way to use for
         // backpropagation.
-        double[] inputsToNextLayer = data.inputs;
+        Double[] inputsToNextLayer = data.inputs;
 
         for (int i = 0; i < layers.length; i++) {
             inputsToNextLayer = layers[i].outputs(inputsToNextLayer, learnData.layerData[i]);
@@ -85,8 +88,14 @@ class Network {
 
     }
 
-    // Gets the total cost of the currect network
-    public double cost(double[][] inputs, double[][] expected) {
+    /**
+     * Gets the total cost of the currect network
+     * 
+     * @param inputs
+     * @param expected
+     * @return
+     */
+    public double cost(Double[][] inputs, double[][] expected) {
         double totalCost = 0;
 
         for (int i = 0; i < inputs.length; i++) {
@@ -96,9 +105,16 @@ class Network {
         return totalCost / inputs.length;
     }
 
-    // Calculates the loss of the given input
-    public double loss(double[] inputs, double[] expected) {
-        double[] outputs = forwardPropogation(inputs);
+    /**
+     * Calculates the loss of the given input
+     * 
+     * @param <T>
+     * @param inputs
+     * @param expected
+     * @return
+     */
+    public <T extends Number> Double loss(T[] inputs, double[] expected) {
+        Double[] outputs = forwardPropogation(inputs);
         double cost = 0;
 
         for (int out = 0; out < outputs.length; out++) {
@@ -108,29 +124,52 @@ class Network {
         return cost;
     }
 
-    // Loops over every layer and returns the output layer's values
-    public double[] forwardPropogation(double[] inputs) {
+    /**
+     * Loops over every layer and returns the output layer's values
+     * 
+     * @param <T>
+     * @param inputs
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends Number> Double[] forwardPropogation(T[] inputs) {
         for (Layer l : layers) {
-            inputs = l.outputs(inputs);
+            inputs = (T[]) l.outputs(inputs);
         }
-        return inputs;
+        return (Double[]) inputs;
     }
 
-    // Error cost calculation
+    /**
+     * Error cost calculation
+     * 
+     * @param actual
+     * @param expected
+     * @return
+     */
     public double outCost(double actual, double expected) {
         double error = actual - expected;
         return error * error;
     }
 
-    // Classifies the input based on the output
-    public Object[] classify(double[] inputs) {
-        double[] outputs = forwardPropogation(inputs);
+    /**
+     * Classifies the input based on the output
+     * 
+     * @param inputs
+     * @return
+     */
+    public Object[] classify(Double[] inputs) {
+        Double[] outputs = forwardPropogation(inputs);
         int id = arrayMax(outputs);
         return new Object[] { id, outputs };
     }
 
-    // Finds the max value in an array and returns the index of the value
-    private int arrayMax(double[] inputs) {
+    /**
+     * Finds the max value in an array and returns the index of the value
+     * 
+     * @param inputs
+     * @return
+     */
+    private int arrayMax(Double[] inputs) {
         int max = 0;
         for (int i = 0; i < inputs.length; i++) {
             if (inputs[i] > inputs[max]) {

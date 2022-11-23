@@ -31,7 +31,7 @@ public class MnistLabelFile extends MnistDbFile {
      * @throws IOException
      */
     public int readLabel() throws IOException {
-        return readUnsignedByte();
+        return super.readUnsignedByte();
     }
 
     /** Read the specified number of labels from the current position */

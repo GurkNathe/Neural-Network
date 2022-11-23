@@ -2,6 +2,7 @@ package MNIST;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 
 /**
  * 
@@ -27,8 +28,8 @@ public class MnistImageFile extends MnistDbFile {
         super(name, mode);
 
         // read header information
-        rows = readInt();
-        cols = readInt();
+        rows = super.readInt();
+        cols = super.readInt();
     }
 
     /**
@@ -41,7 +42,7 @@ public class MnistImageFile extends MnistDbFile {
         int[][] dat = new int[getRows()][getCols()];
         for (int i = 0; i < getCols(); i++) {
             for (int j = 0; j < getRows(); j++) {
-                dat[i][j] = readUnsignedByte();
+                dat[i][j] = super.readUnsignedByte();
             }
         }
         return dat;

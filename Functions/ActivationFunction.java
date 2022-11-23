@@ -1,5 +1,6 @@
+package Functions;
 public interface ActivationFunction {
-    public double activationFunction(double[] inputs, int index);
+    public <T extends Number> double activationFunction(T[] inputs, int index);
 
-    public double activationDerivative(double[] inputs, int index);
+    public <T extends Number> double activationDerivative(T[] inputs, int index);
 }
