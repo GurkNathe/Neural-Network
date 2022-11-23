@@ -5,7 +5,7 @@ public class Cost {
         MeanSquaredError
     }
 
-    public static MeanSquaredError getCostFunction(CostFunctionType costFunctionType) {
+    public static CostFunction getCostFunction(CostFunctionType costFunctionType) {
         switch (costFunctionType) {
             case MeanSquaredError:
                 return new MeanSquaredError();
